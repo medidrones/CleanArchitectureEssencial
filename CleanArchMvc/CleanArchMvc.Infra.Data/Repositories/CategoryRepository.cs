@@ -16,7 +16,7 @@ namespace CleanArchMvc.Infra.Data.Repositories
             _categoryContext = context;
         }        
 
-        public async Task<Category> CreateAsync(Category category)
+        public async Task<Category> Create(Category category)
         {
             _categoryContext.Add(category);
             await _categoryContext.SaveChangesAsync();
@@ -24,30 +24,30 @@ namespace CleanArchMvc.Infra.Data.Repositories
             return category;
         }
 
-        public async Task<Category> UpdateAsync(Category category)
+        public async Task<Category> GetById(int? id)
         {
-            _categoryContext.Update(category);
-            await _categoryContext.SaveChangesAsync();
-
-            return category;
+            return await _categoryContext.Categories.FindAsync(id);
         }
 
-        public async Task<Category> RemoveAsync(Category category)
+        public async Task<IEnumerable<Category>> GetCategories()
+        {
+            return await _categoryContext.Categories.ToListAsync();
+        }
+
+        public async Task<Category> Remove(Category category)
         {
             _categoryContext.Remove(category);
             await _categoryContext.SaveChangesAsync();
 
             return category;
-        }        
-
-        public async Task<Category> GetByIdAsync(int? id)
-        {
-            return await _categoryContext.Categories.FindAsync(id);
         }
 
-        public async Task<IEnumerable<Category>> GetCategoryAsync()
+        public async Task<Category> Update(Category category)
         {
-            return await _categoryContext.Categories.ToListAsync();
+            _categoryContext.Update(category);
+            await _categoryContext.SaveChangesAsync();
+
+            return category;
         }
     }
 }

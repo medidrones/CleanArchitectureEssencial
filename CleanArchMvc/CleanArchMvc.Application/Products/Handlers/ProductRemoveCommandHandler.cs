@@ -14,7 +14,8 @@ namespace CleanArchMvc.Application.Products.Handlers
 
         public ProductRemoveCommandHandler(IProductRepository productRepository)
         {
-            _productRepository = productRepository;
+            _productRepository = productRepository ??
+                throw new ArgumentNullException(nameof(productRepository));
         }
 
         public async Task<Product> Handle(ProductRemoveCommand request, CancellationToken cancellationToken)

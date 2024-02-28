@@ -23,13 +23,17 @@ namespace CleanArchMvc.Infra.Data.Repositories
 
             return product;
         }
-
-        public async Task<Product> UpdateAsync(Product product)
+        
+        public async Task<Product> GetByIdAsync(int? id)
         {
-            _productContext.Update(product);
-            await _productContext.SaveChangesAsync();
+            return await _productContext.Products
+                .Include(c => c.Category)
+                .SingleOrDefaultAsync(p => p.Id == id);           
+        }       
 
-            return product;
+        public async Task<IEnumerable<Product>> GetProductsAsync()
+        {
+            return await _productContext.Products.ToListAsync();
         }
 
         public async Task<Product> RemoveAsync(Product product)
@@ -38,27 +42,14 @@ namespace CleanArchMvc.Infra.Data.Repositories
             await _productContext.SaveChangesAsync();
 
             return product;
-        }               
-
-        public async Task<Product> GetByIdAsync(int? id)
-        {
-            return await _productContext.Products
-                .Include(c => c.Category)
-                .SingleOrDefaultAsync(p => p.Id == id);
-
-            //return await _productContext.Products.FindAsync(id);
         }
 
-        public async Task<IEnumerable<Product>> GetProductsAsync()
+        public async Task<Product> UpdateAsync(Product product)
         {
-            return await _productContext.Products.ToListAsync();
-        }
+            _productContext.Update(product);
+            await _productContext.SaveChangesAsync();
 
-        /*public async Task<Product> GetProductCategoryAsync(int? id)
-        {
-            return await _productContext.Products
-                .Include(c => c.Category)
-                .SingleOrDefaultAsync(p => p.Id == id);
-        }*/                
+            return product;
+        }             
     }
 }

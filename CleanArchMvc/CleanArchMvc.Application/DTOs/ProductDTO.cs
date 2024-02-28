@@ -12,11 +12,13 @@ namespace CleanArchMvc.Application.DTOs
         [Required(ErrorMessage = "The Name is Required")]
         [MinLength(3)]
         [MaxLength(100)]
+        [DisplayName("Name")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "The Description is Required")]
         [MinLength(5)]
         [MaxLength(200)]
+        [DisplayName("Description")]
         public string Description { get; set; }
 
         [Required(ErrorMessage = "The Price is Required")]
@@ -27,7 +29,7 @@ namespace CleanArchMvc.Application.DTOs
         public decimal Price { get; set; }
 
         [Required(ErrorMessage = "The Stock is Required")]
-        [Range(0, 9999)]
+        [Range(1, 9999)]
         [DisplayName("Stock")]
         public int Stock {  get; set; }
 

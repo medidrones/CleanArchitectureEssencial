@@ -7,25 +7,19 @@ namespace CleanArchMvc.Domain.Entities
     {        
         public string Name { get; private set; }
 
-        public ICollection<Product> Products { get; set;}
-
         public Category(string name)
         {
             ValidateDomain(name);
-        }        
+        }
 
         public Category(int id, string name)
         {
             DomainExceptionValidation.When(id < 0, "Invalid Id value.");
             Id = id;
-
             ValidateDomain(name);
         }
 
-        public void Update(string name)
-        {
-            ValidateDomain(name);
-        }
+        public ICollection<Product> Products { get; set; }
 
         private void ValidateDomain(string name)
         {
@@ -33,6 +27,6 @@ namespace CleanArchMvc.Domain.Entities
             DomainExceptionValidation.When(name.Length < 3, "Invalid name, too short, minimum 3 charecters.");
 
             Name = name;
-        }
-    }
+        }        
+    }    
 }
