@@ -2,14 +2,13 @@
 using CleanArchMvc.Application.DTOs;
 using CleanArchMvc.Application.Products.Commands;
 
-namespace CleanArchMvc.Application.Mappings
+namespace CleanArchMvc.Application.Mappings;
+
+public class DTOToCommandMappingProfile : Profile
 {
-    public class DTOToCommandMappingProfile : Profile
+    public DTOToCommandMappingProfile()
     {
-        public DTOToCommandMappingProfile()
-        {
-            CreateMap<ProductDTO, ProductCreateCommand>();
-            CreateMap<ProductDTO, ProductUpdateCommand>();
-        }
+        CreateMap<ProductDTO, ProductCreateCommand>();
+        CreateMap<ProductDTO, ProductUpdateCommand>();
     }
 }

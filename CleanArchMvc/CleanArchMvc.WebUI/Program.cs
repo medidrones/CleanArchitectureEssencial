@@ -1,20 +1,41 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
+using CleanArchMvc.Domain.Account;
+using CleanArchMvc.Infra.IoC;
 
-namespace CleanArchMvc.WebUI
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddControllersWithViews();
+
+var app = builder.Build();
+
+if (!app.Environment.IsDevelopment())
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
+    app.UseExceptionHandler("/Home/Error");   
+    app.UseHsts();
+}
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+
+SeedUserRoles(app);
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.Run();
+
+void SeedUserRoles(IApplicationBuilder app)
+{
+    using (var serviceScope = app.ApplicationServices.CreateScope())
+    {
+        var seed = serviceScope.ServiceProvider
+                               .GetService<ISeedUserRoleInitial>();
+        seed.SeedUsers();
+        seed.SeedRoles();
     }
 }

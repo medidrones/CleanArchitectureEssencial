@@ -2,36 +2,32 @@
 using CleanArchMvc.Domain.Entities;
 using CleanArchMvc.Domain.Interfaces;
 using MediatR;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace CleanArchMvc.Application.Products.Handlers
+namespace CleanArchMvc.Application.Products.Handlers;
+
+public class ProductRemoveCommandHandler : IRequestHandler<ProductRemoveCommand, Product>
 {
-    public class ProductRemoveCommandHandler : IRequestHandler<ProductRemoveCommand, Product>
+    private readonly IProductRepository _productRepository;
+
+    public ProductRemoveCommandHandler(IProductRepository productRepository)
     {
-        private readonly IProductRepository _productRepository;
+        _productRepository = productRepository ??
+            throw new ArgumentNullException(nameof(productRepository));
+    }
 
-        public ProductRemoveCommandHandler(IProductRepository productRepository)
+    public async Task<Product> Handle(ProductRemoveCommand request, CancellationToken cancellationToken)
+    {
+        var product = await _productRepository.GetByIdAsync(request.Id);
+
+        if (product == null)
         {
-            _productRepository = productRepository ??
-                throw new ArgumentNullException(nameof(productRepository));
+            throw new ApplicationException($"Entity could not be found.");
         }
-
-        public async Task<Product> Handle(ProductRemoveCommand request, CancellationToken cancellationToken)
+        else
         {
-            var product = await _productRepository.GetByIdAsync(request.Id);
+            var result = await _productRepository.RemoveAsync(product);
 
-            if (product == null)
-            {
-                throw new ApplicationException($"Entity could not be found.");
-            }
-            else
-            {
-                var result = await _productRepository.RemoveAsync(product);
-
-                return result;
-            }
+            return result;
         }
     }
 }
