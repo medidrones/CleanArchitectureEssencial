@@ -1,4 +1,6 @@
 using CleanArchMvc.Infra.IoC;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +10,31 @@ builder.Services.AddInfrastructureSwagger();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+//builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v2", new OpenApiInfo
+    {
+        Version = "v2",
+        Title = "CleanArchMvc API",
+        Description = "Projeto API",
+        TermsOfService = new Uri("https://examplp.com/termoservico"),
+        Contact = new OpenApiContact
+        {
+            Name = "Contato",
+            Url = new Uri("https://examplo.com/contato")
+        },
+        License = new OpenApiLicense
+        {
+            Name = "Licença",
+            Url = new Uri("https://examplo.com/licenca")
+        }
+    });
+
+    // usando System.Reflection;
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+});
 
 var app = builder.Build();
 

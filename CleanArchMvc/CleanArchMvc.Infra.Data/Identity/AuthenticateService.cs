@@ -8,10 +8,11 @@ public class AuthenticateService : IAuthenticate
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
 
-    public AuthenticateService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+    public AuthenticateService(SignInManager<ApplicationUser> signInManager,
+        UserManager<ApplicationUser> userManager)
     {
-        _userManager = userManager;
         _signInManager = signInManager;
+        _userManager = userManager;
     }
 
     public async Task<bool> Authenticate(string email, string password)
@@ -20,13 +21,12 @@ public class AuthenticateService : IAuthenticate
 
         return result.Succeeded;
     }
-
     public async Task<bool> RegisterUser(string email, string password)
     {
         var applicationUser = new ApplicationUser
         {
             UserName = email,
-            Email = email
+            Email = email,
         };
 
         var result = await _userManager.CreateAsync(applicationUser, password);
@@ -38,6 +38,18 @@ public class AuthenticateService : IAuthenticate
 
         return result.Succeeded;
     }
+
+    //teste de atribuição de claims a um usuário
+    //public async Task AplicarRoleAdmin (string email)
+    //{
+    //    var usuario = await _userManager.FindByEmailAsync(email);
+    //    await _userManager.AddClaimAsync(usuario, new Claim("Admin", "true"));
+    //}
+    //public async Task RemoverRoleAdmin(string email)
+    //{
+    //    var usuario = await _userManager.FindByEmailAsync(email);
+    //    await _userManager.RemoveClaimAsync(usuario, new Claim("Admin", "true"));
+    //}
 
     public async Task Logout()
     {
